@@ -158,7 +158,7 @@ void Renderer::drawMesh(const Mesh& mesh, const Shader& shader) {
 
 void Renderer::initializeBasicShader() {
     const std::string vertexSource = R"(
-        #version 330 core
+        #version 410 core
         layout (location = 0) in vec3 aPos;
         
         void main() {
@@ -167,7 +167,7 @@ void Renderer::initializeBasicShader() {
     )";
     
     const std::string fragmentSource = R"(
-        #version 330 core
+        #version 410 core
         out vec4 FragColor;
         
         void main() {

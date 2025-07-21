@@ -405,7 +405,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/Graphic Programming/C++Bridge/Include",
+					"$(SRCROOT)/Graphic",
+					"Programming/C++Bridge/Include",
 				);
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -443,7 +444,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/Graphic Programming/C++Bridge/Include",
+					"$(SRCROOT)/Graphic",
+					"Programming/C++Bridge/Include",
 				);
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (

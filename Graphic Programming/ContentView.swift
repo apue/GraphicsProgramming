@@ -105,14 +105,14 @@ struct ContentView: View {
                 description: "绘制一个简单的三角形",
                 sourceCode: """
                 // 顶点着色器
-                #version 330 core
+                #version 410 core
                 layout (location = 0) in vec3 aPos;
                 void main() {
                     gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
                 }
                 
                 // 片段着色器
-                #version 330 core
+                #version 410 core
                 out vec4 FragColor;
                 void main() {
                     FragColor = vec4(1.0, 0.5, 0.2, 1.0);
@@ -126,7 +126,7 @@ struct ContentView: View {
                 description: "使用顶点颜色的三角形",
                 sourceCode: """
                 // 顶点着色器
-                #version 330 core
+                #version 410 core
                 layout (location = 0) in vec3 aPos;
                 layout (location = 1) in vec3 aColor;
                 out vec3 vertexColor;
@@ -136,7 +136,7 @@ struct ContentView: View {
                 }
                 
                 // 片段着色器
-                #version 330 core
+                #version 410 core
                 in vec3 vertexColor;
                 out vec4 FragColor;
                 void main() {
@@ -202,17 +202,9 @@ struct ExampleDetailView: View {
             Divider()
             
             ZStack {
-                OpenGLView {
-                    renderExample()
-                }
-                .border(Color.gray)
-                .padding()
-                .onAppear {
-                    OpenGLExampleManager.shared.loadExample(example)
-                }
-                .onDisappear {
-                    OpenGLExampleManager.shared.cleanup()
-                }
+                OpenGLView()
+                    .border(Color.gray)
+                    .padding()
                 
                 if showSourceCode {
                     SourceCodeView(code: example.sourceCode) {
@@ -226,10 +218,6 @@ struct ExampleDetailView: View {
                 .padding()
         }
         .navigationTitle(example.title)
-    }
-    
-    private func renderExample() {
-        OpenGLExampleManager.shared.renderCurrentExample()
     }
 }
 

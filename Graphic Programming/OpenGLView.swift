@@ -12,13 +12,7 @@ import OpenGL.GL3
 
 final class OpenGLViewController: NSViewController {
     private var glView: NSOpenGLView!
-    private var renderCallback: (() -> Void)?
     private var cppRenderer: OpaquePointer?
-    
-    convenience init(renderCallback: @escaping () -> Void) {
-        self.init()
-        self.renderCallback = renderCallback
-    }
     
     override func loadView() {
         let pixelFormatAttributes: [NSOpenGLPixelFormatAttribute] = [
@@ -43,10 +37,20 @@ final class OpenGLViewController: NSViewController {
             
             // Initialize C++ renderer
             cppRenderer = createRenderer()
-            initializeRenderer(cppRenderer)
-            
-            // 设置OpenGL视口
-            resizeViewport(cppRenderer, Int32(glView.bounds.width), Int32(glView.bounds.height))
+            if let renderer = cppRenderer {
+                initializeRenderer(renderer)
+                checkOpenGLError("initializeRenderer")
+                
+                // 设置OpenGL视口
+                resizeViewport(renderer, Int32(glView.bounds.width), Int32(glView.bounds.height))
+                checkOpenGLError("resizeViewport")
+                
+                print("OpenGL Renderer initialized successfully")
+            } else {
+                print("Failed to create C++ renderer")
+            }
+        } else {
+            print("Failed to create OpenGL context")
         }
     }
     
@@ -59,25 +63,40 @@ final class OpenGLViewController: NSViewController {
         }
     }
     
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        
+        // 当视图大小改变时更新视口
+        if let renderer = cppRenderer {
+            resizeViewport(renderer, Int32(glView.bounds.width), Int32(glView.bounds.height))
+        }
+    }
+    
     private func render() {
-        guard let context = glView.openGLContext else { return }
+        guard let context = glView.openGLContext else { 
+            print("OpenGL Error: No OpenGL context available")
+            return 
+        }
         
         context.makeCurrentContext()
         
         // Use C++ renderer
         if let renderer = cppRenderer {
             renderFrame(renderer)
+            checkOpenGLError("C++ renderFrame")
+        } else {
+            print("OpenGL Error: No C++ renderer available")
         }
-        
-        // 执行自定义渲染
-        renderCallback?()
         
         // 交换缓冲区
         glView.openGLContext?.flushBuffer()
     }
     
-    func updateRenderCallback(_ callback: @escaping () -> Void) {
-        self.renderCallback = callback
+    private func checkOpenGLError(_ operation: String) {
+        let error = glGetError()
+        if error != GLenum(GL_NO_ERROR) {
+            print("OpenGL Error in \(operation): \(error)")
+        }
     }
     
     deinit {
@@ -88,13 +107,11 @@ final class OpenGLViewController: NSViewController {
 }
 
 struct OpenGLView: NSViewControllerRepresentable {
-    var renderCallback: () -> Void
-    
     func makeNSViewController(context: Context) -> OpenGLViewController {
-        return OpenGLViewController(renderCallback: renderCallback)
+        return OpenGLViewController()
     }
     
     func updateNSViewController(_ nsViewController: OpenGLViewController, context: Context) {
-        nsViewController.updateRenderCallback(renderCallback)
+        // C++渲染器自动处理渲染，无需额外更新
     }
 }
