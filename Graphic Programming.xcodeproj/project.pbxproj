@@ -1,0 +1,558 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		661BD9B22E2E170E0004517C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 661BD9992E2E170C0004517C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 661BD9A02E2E170C0004517C;
+			remoteInfo = "Graphic Programming";
+		};
+		661BD9BC2E2E170E0004517C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 661BD9992E2E170C0004517C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 661BD9A02E2E170C0004517C;
+			remoteInfo = "Graphic Programming";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		661BD9A12E2E170C0004517C /* Graphic Programming.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Graphic Programming.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		661BD9B12E2E170E0004517C /* Graphic ProgrammingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Graphic ProgrammingTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		661BD9BB2E2E170E0004517C /* Graphic ProgrammingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Graphic ProgrammingUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		661BD9A32E2E170C0004517C /* Graphic Programming */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Graphic Programming";
+			sourceTree = "<group>";
+		};
+		661BD9B42E2E170E0004517C /* Graphic ProgrammingTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Graphic ProgrammingTests";
+			sourceTree = "<group>";
+		};
+		661BD9BE2E2E170E0004517C /* Graphic ProgrammingUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Graphic ProgrammingUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		661BD99E2E2E170C0004517C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		661BD9AE2E2E170E0004517C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		661BD9B82E2E170E0004517C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		661BD9982E2E170C0004517C = {
+			isa = PBXGroup;
+			children = (
+				661BD9A32E2E170C0004517C /* Graphic Programming */,
+				661BD9B42E2E170E0004517C /* Graphic ProgrammingTests */,
+				661BD9BE2E2E170E0004517C /* Graphic ProgrammingUITests */,
+				661BD9A22E2E170C0004517C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		661BD9A22E2E170C0004517C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				661BD9A12E2E170C0004517C /* Graphic Programming.app */,
+				661BD9B12E2E170E0004517C /* Graphic ProgrammingTests.xctest */,
+				661BD9BB2E2E170E0004517C /* Graphic ProgrammingUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		661BD9A02E2E170C0004517C /* Graphic Programming */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 661BD9C52E2E170E0004517C /* Build configuration list for PBXNativeTarget "Graphic Programming" */;
+			buildPhases = (
+				661BD99D2E2E170C0004517C /* Sources */,
+				661BD99E2E2E170C0004517C /* Frameworks */,
+				661BD99F2E2E170C0004517C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				661BD9A32E2E170C0004517C /* Graphic Programming */,
+			);
+			name = "Graphic Programming";
+			packageProductDependencies = (
+			);
+			productName = "Graphic Programming";
+			productReference = 661BD9A12E2E170C0004517C /* Graphic Programming.app */;
+			productType = "com.apple.product-type.application";
+		};
+		661BD9B02E2E170E0004517C /* Graphic ProgrammingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 661BD9C82E2E170E0004517C /* Build configuration list for PBXNativeTarget "Graphic ProgrammingTests" */;
+			buildPhases = (
+				661BD9AD2E2E170E0004517C /* Sources */,
+				661BD9AE2E2E170E0004517C /* Frameworks */,
+				661BD9AF2E2E170E0004517C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				661BD9B32E2E170E0004517C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				661BD9B42E2E170E0004517C /* Graphic ProgrammingTests */,
+			);
+			name = "Graphic ProgrammingTests";
+			packageProductDependencies = (
+			);
+			productName = "Graphic ProgrammingTests";
+			productReference = 661BD9B12E2E170E0004517C /* Graphic ProgrammingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		661BD9BA2E2E170E0004517C /* Graphic ProgrammingUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 661BD9CB2E2E170E0004517C /* Build configuration list for PBXNativeTarget "Graphic ProgrammingUITests" */;
+			buildPhases = (
+				661BD9B72E2E170E0004517C /* Sources */,
+				661BD9B82E2E170E0004517C /* Frameworks */,
+				661BD9B92E2E170E0004517C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				661BD9BD2E2E170E0004517C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				661BD9BE2E2E170E0004517C /* Graphic ProgrammingUITests */,
+			);
+			name = "Graphic ProgrammingUITests";
+			packageProductDependencies = (
+			);
+			productName = "Graphic ProgrammingUITests";
+			productReference = 661BD9BB2E2E170E0004517C /* Graphic ProgrammingUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		661BD9992E2E170C0004517C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					661BD9A02E2E170C0004517C = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					661BD9B02E2E170E0004517C = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 661BD9A02E2E170C0004517C;
+					};
+					661BD9BA2E2E170E0004517C = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 661BD9A02E2E170C0004517C;
+					};
+				};
+			};
+			buildConfigurationList = 661BD99C2E2E170C0004517C /* Build configuration list for PBXProject "Graphic Programming" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 661BD9982E2E170C0004517C;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 661BD9A22E2E170C0004517C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				661BD9A02E2E170C0004517C /* Graphic Programming */,
+				661BD9B02E2E170E0004517C /* Graphic ProgrammingTests */,
+				661BD9BA2E2E170E0004517C /* Graphic ProgrammingUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		661BD99F2E2E170C0004517C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		661BD9AF2E2E170E0004517C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		661BD9B92E2E170E0004517C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		661BD99D2E2E170C0004517C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		661BD9AD2E2E170E0004517C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		661BD9B72E2E170E0004517C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		661BD9B32E2E170E0004517C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 661BD9A02E2E170C0004517C /* Graphic Programming */;
+			targetProxy = 661BD9B22E2E170E0004517C /* PBXContainerItemProxy */;
+		};
+		661BD9BD2E2E170E0004517C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 661BD9A02E2E170C0004517C /* Graphic Programming */;
+			targetProxy = 661BD9BC2E2E170E0004517C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		661BD9C32E2E170E0004517C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		661BD9C42E2E170E0004517C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		661BD9C62E2E170E0004517C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Graphic Programming/Graphic_Programming.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "in.lvtu.Graphic-Programming";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		661BD9C72E2E170E0004517C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Graphic Programming/Graphic_Programming.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "in.lvtu.Graphic-Programming";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		661BD9C92E2E170E0004517C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "in.lvtu.Graphic-ProgrammingTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Graphic Programming.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Graphic Programming";
+			};
+			name = Debug;
+		};
+		661BD9CA2E2E170E0004517C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "in.lvtu.Graphic-ProgrammingTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Graphic Programming.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Graphic Programming";
+			};
+			name = Release;
+		};
+		661BD9CC2E2E170E0004517C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "in.lvtu.Graphic-ProgrammingUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Graphic Programming";
+			};
+			name = Debug;
+		};
+		661BD9CD2E2E170E0004517C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5T23H9WG9N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "in.lvtu.Graphic-ProgrammingUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Graphic Programming";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		661BD99C2E2E170C0004517C /* Build configuration list for PBXProject "Graphic Programming" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				661BD9C32E2E170E0004517C /* Debug */,
+				661BD9C42E2E170E0004517C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		661BD9C52E2E170E0004517C /* Build configuration list for PBXNativeTarget "Graphic Programming" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				661BD9C62E2E170E0004517C /* Debug */,
+				661BD9C72E2E170E0004517C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		661BD9C82E2E170E0004517C /* Build configuration list for PBXNativeTarget "Graphic ProgrammingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				661BD9C92E2E170E0004517C /* Debug */,
+				661BD9CA2E2E170E0004517C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		661BD9CB2E2E170E0004517C /* Build configuration list for PBXNativeTarget "Graphic ProgrammingUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				661BD9CC2E2E170E0004517C /* Debug */,
+				661BD9CD2E2E170E0004517C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 661BD9992E2E170C0004517C /* Project object */;
+}
