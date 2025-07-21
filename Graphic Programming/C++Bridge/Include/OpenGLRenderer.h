@@ -9,15 +9,21 @@ extern "C" {
 
 // C interface for Swift bridging
 typedef struct OpenGLRenderer OpenGLRenderer;
+typedef struct ExampleInstance ExampleInstance;
 
-// Renderer lifecycle
+// Traditional renderer (for backward compatibility)
 OpenGLRenderer* createRenderer(void);
 void destroyRenderer(OpenGLRenderer* renderer);
-
-// Rendering functions
 void initializeRenderer(OpenGLRenderer* renderer);
 void renderFrame(OpenGLRenderer* renderer);
 void resizeViewport(OpenGLRenderer* renderer, int width, int height);
+
+// New example-based system
+ExampleInstance* createExampleByClassName(const char* className);
+void destroyExample(ExampleInstance* example);
+void initializeExample(ExampleInstance* example);
+void renderExample(ExampleInstance* example);
+void resizeExample(ExampleInstance* example, int width, int height);
 
 // Shader management
 unsigned int loadShader(const char* vertexSource, const char* fragmentSource);

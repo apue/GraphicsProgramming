@@ -13,6 +13,8 @@ import OpenGL.GL3
 final class OpenGLViewController: NSViewController {
     private var glView: NSOpenGLView!
     private var cppRenderer: OpaquePointer?
+    private var currentExample: OpaquePointer?
+    private var currentExampleMetadata: ExampleMetadata?
     
     override func loadView() {
         let pixelFormatAttributes: [NSOpenGLPixelFormatAttribute] = [
@@ -80,12 +82,15 @@ final class OpenGLViewController: NSViewController {
         
         context.makeCurrentContext()
         
-        // Use C++ renderer
-        if let renderer = cppRenderer {
+        // Render current example if available, otherwise use default renderer
+        if let example = currentExample {
+            renderExample(example)
+            checkOpenGLError("Example renderFrame")
+        } else if let renderer = cppRenderer {
             renderFrame(renderer)
             checkOpenGLError("C++ renderFrame")
         } else {
-            print("OpenGL Error: No C++ renderer available")
+            print("OpenGL Error: No renderer or example available")
         }
         
         // 交换缓冲区
@@ -99,7 +104,39 @@ final class OpenGLViewController: NSViewController {
         }
     }
     
+    func setExample(_ metadata: ExampleMetadata?) {
+        // Clean up current example
+        if let example = currentExample {
+            destroyExample(example)
+            currentExample = nil
+        }
+        
+        // Set new example
+        if let metadata = metadata {
+            currentExample = ExampleManager.shared.createCppExample(metadata)
+            currentExampleMetadata = metadata
+            
+            if let example = currentExample {
+                if let context = glView.openGLContext {
+                    context.makeCurrentContext()
+                    initializeExample(example)
+                    resizeExample(example, Int32(glView.bounds.width), Int32(glView.bounds.height))
+                    print("Switched to example: \(metadata.title)")
+                } else {
+                    print("Failed to make OpenGL context current for example initialization")
+                }
+            } else {
+                print("Failed to create example: \(metadata.title)")
+            }
+        } else {
+            currentExampleMetadata = nil
+        }
+    }
+    
     deinit {
+        if let example = currentExample {
+            destroyExample(example)
+        }
         if let renderer = cppRenderer {
             destroyRenderer(renderer)
         }
@@ -107,11 +144,19 @@ final class OpenGLViewController: NSViewController {
 }
 
 struct OpenGLView: NSViewControllerRepresentable {
+    let exampleMetadata: ExampleMetadata?
+    
+    init(exampleMetadata: ExampleMetadata? = nil) {
+        self.exampleMetadata = exampleMetadata
+    }
+    
     func makeNSViewController(context: Context) -> OpenGLViewController {
-        return OpenGLViewController()
+        let controller = OpenGLViewController()
+        return controller
     }
     
     func updateNSViewController(_ nsViewController: OpenGLViewController, context: Context) {
-        // C++渲染器自动处理渲染，无需额外更新
+        // Update example when metadata changes
+        nsViewController.setExample(exampleMetadata)
     }
 }

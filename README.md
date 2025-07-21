@@ -1,379 +1,475 @@
-# OpenGL C++ 学习框架使用指南
+# OpenGL学习框架 - 配置驱动架构
 
 ## 项目概述
 
-这是一个基于SwiftUI的macOS OpenGL学习框架，专为学习《Computer Graphics Programming in OpenGL with C++》设计。框架提供了完整的C++开发环境，允许你直接使用C++编写OpenGL程序，同时享受SwiftUI的现代化界面。
+这是一个基于SwiftUI + C++的现代化OpenGL学习框架，专为学习《Computer Graphics Programming in OpenGL with C++》设计。框架采用**配置文件驱动 + C++多态**的优雅架构，让添加新的OpenGL示例变得超级简单。
 
-## C++ 开发环境配置
+## ✨ 架构特色
 
-### 1. 项目结构
+- 🎯 **配置文件驱动** - JSON文件定义示例信息，无需修改Swift代码
+- 🔧 **C++多态架构** - 基于`ExampleBase`的统一接口，利用多态特性
+- 📁 **模块化设计** - Swift端高度解耦，每个组件职责单一
+- 🚀 **自动发现** - 应用启动时自动扫描和加载示例配置
+- 💡 **热插拔** - 运行时动态创建和切换示例实例
+
+## 🏗 项目结构
 
 ```
 Graphic Programming/
-├── C++Bridge/                    # C++桥接框架
-│   ├── Include/                  # 头文件目录
-│   │   ├── OpenGLRenderer.h      # C接口桥接头文件
-│   │   ├── GraphicsProgramming.hpp  # C++主要接口
-│   │   ├── ExamplePrograms.hpp   # 示例程序头文件
-│   │   └── OpenGLRenderer-Bridging-Header.h  # Swift桥接头文件
-│   └── Renderers/                # C++实现文件
-│       ├── OpenGLRenderer.cpp    # C桥接实现
-│       ├── GraphicsProgramming.cpp  # C++主要实现
-│       └── ExamplePrograms.cpp   # 示例程序实现
-├── OpenGLView.swift              # 修改后的OpenGL视图组件
-├── ContentView.swift             # 主界面
-└── 其他Swift文件...
+├── Examples/                          # 示例定义（JSON + C++实现）
+│   ├── chapter1/
+│   │   ├── triangle.json              # 示例配置文件
+│   │   └── triangle.cpp               # C++实现（已内联到ExampleRegistry.cpp）
+│   └── chapter2/
+│       ├── raster_shader.json         # 彩色着色器配置
+│       └── raster_shader.cpp          # 着色器实现
+├── Graphic Programming/               # Swift主要代码
+│   ├── ContentView.swift              # 主界面（仅46行！）
+│   ├── ExampleListView.swift          # 左侧示例列表
+│   ├── ExampleDetailView.swift        # 右侧详情视图
+│   ├── ExampleManager.swift           # 示例管理器
+│   ├── ExampleMetadata.swift          # 示例数据模型
+│   └── OpenGLView.swift              # OpenGL渲染视图
+└── C++Bridge/                         # C++桥接层
+    ├── Include/
+    │   ├── ExampleBase.hpp            # 多态基类定义
+    │   ├── OpenGLRenderer.h           # C桥接接口
+    │   └── OpenGLRenderer-Bridging-Header.h
+    └── Renderers/
+        ├── ExampleRegistry.cpp        # 示例注册和实现
+        └── OpenGLRenderer.cpp         # 桥接实现
 ```
 
-### 2. C++编程接口
+## 🚀 快速开始
 
-#### 核心类
+### 1. 编译运行
 
-**GraphicsProgramming::Renderer** - 主要渲染器类
-```cpp
-#include "GraphicsProgramming.hpp"
-using namespace GraphicsProgramming;
+```bash
+# 克隆项目
+cd "Graphic Programming"
 
-Renderer renderer;
-renderer.initialize();  // 初始化OpenGL状态
-renderer.clear();       // 清除屏幕
-renderer.setViewport(width, height);  // 设置视口
+# 在Xcode中打开
+open "Graphic Programming.xcodeproj"
+
+# 按 ⌘+R 运行
 ```
 
-**GraphicsProgramming::Shader** - 着色器管理类
-```cpp
-Shader shader(vertexSource, fragmentSource);
-shader.use();  // 使用着色器
-shader.setUniform("uniformName", value);  // 设置uniform值
+### 2. 使用界面
+
+- **左侧导航栏** - 显示按章节分组的示例列表
+- **右侧渲染区** - 实时显示选中示例的OpenGL渲染效果
+- **点击切换** - 点击左侧示例即可动态切换渲染内容
+
+### 3. 已包含示例
+
+- **基础三角形** - 演示最基础的OpenGL渲染流程
+- **彩色光栅着色器** - 演示顶点颜色插值和动态效果
+
+## 📝 添加新示例
+
+### 方法一：JSON + 内联C++（推荐）
+
+#### 步骤1: 创建JSON配置
+
+在对应章节目录创建配置文件：
+```bash
+# 例如: Examples/chapter3/texture_mapping.json
 ```
 
-**GraphicsProgramming::Mesh** - 几何体类
-```cpp
-std::vector<float> vertices = {
-    -0.5f, -0.5f, 0.0f,  // 顶点1
-     0.5f, -0.5f, 0.0f,  // 顶点2
-     0.0f,  0.5f, 0.0f   // 顶点3
-};
-Mesh triangleMesh(vertices);
-triangleMesh.draw();  // 绘制网格
+```json
+{
+    "id": "chapter3_texture_mapping",
+    "title": "纹理映射",
+    "chapter": "第3章：纹理技术",
+    "description": "演示2D纹理加载、绑定和映射到3D几何体",
+    "orderIndex": 1,
+    "cppClass": "TextureMappingExample"
+}
 ```
 
-### 3. 如何编写C++程序
+#### 步骤2: 实现C++类
 
-#### 步骤1：创建新的C++文件
-在`C++Bridge/Renderers/`目录下创建新的`.cpp`文件：
+在`ExampleRegistry.cpp`文件末尾添加新的示例类：
 
 ```cpp
-// MyProgram.cpp
-#include "GraphicsProgramming.hpp"
-#include "ExamplePrograms.hpp"
-
-namespace GraphicsProgramming {
-namespace Examples {
-
-void MyCustomProgram(Renderer& renderer) {
-    // 清除屏幕为深蓝色
-    renderer.clear(0.0f, 0.0f, 0.3f, 1.0f);
+// 纹理映射示例
+class TextureMappingExample : public ExampleBase {
+private:
+    GLuint shaderProgram;
+    GLuint VAO, VBO, texture;
     
-    // 定义三角形顶点
-    std::vector<float> vertices = {
-        -0.5f, -0.5f, 0.0f,  // 左下
-         0.5f, -0.5f, 0.0f,  // 右下
-         0.0f,  0.5f, 0.0f   // 顶部
-    };
+    // 顶点着色器
+    const char* vertexShaderSource = R"(
+        #version 410 core
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec2 aTexCoord;
+        out vec2 TexCoord;
+        void main() {
+            gl_Position = vec4(aPos, 1.0);
+            TexCoord = aTexCoord;
+        }
+    )";
     
-    // 渲染三角形
-    renderer.drawTriangle(vertices);
-}
+    // 片段着色器
+    const char* fragmentShaderSource = R"(
+        #version 410 core
+        in vec2 TexCoord;
+        out vec4 FragColor;
+        uniform sampler2D ourTexture;
+        void main() {
+            FragColor = texture(ourTexture, TexCoord);
+        }
+    )";
 
-} // namespace Examples
-} // namespace GraphicsProgramming
-```
-
-#### 步骤2：在头文件中声明函数
-在`C++Bridge/Include/ExamplePrograms.hpp`中添加声明：
-
-```cpp
-void MyCustomProgram(Renderer& renderer);
-```
-
-#### 步骤3：在Swift中调用（可选）
-如果需要从Swift调用特定的C++程序，可以修改`OpenGLRenderer.cpp`中的`renderFrame`函数。
-
-#### 步骤4：编译和运行
-1. 在Xcode中选择你的目标设备
-2. 按⌘+R运行项目
-3. 程序会自动编译C++代码并运行
-
-### 4. 预设示例程序
-
-框架包含了多个对应书籍章节的示例程序：
-
-#### Chapter2_BasicTriangle - 基础三角形
-```cpp
-GraphicsProgramming::Examples::Chapter2_BasicTriangle(renderer);
-```
-
-#### Chapter2_AnimatedTriangle - 动画三角形
-```cpp
-GraphicsProgramming::Examples::Chapter2_AnimatedTriangle(renderer);
-```
-
-#### Chapter3_ColoredQuad - 彩色四边形
-```cpp
-GraphicsProgramming::Examples::Chapter3_ColoredQuad(renderer);
-```
-
-#### Chapter4_MultipleObjects - 多个对象
-```cpp
-GraphicsProgramming::Examples::Chapter4_MultipleObjects(renderer);
-```
-
-### 5. 编译配置
-
-#### Xcode配置要求
-
-1. **C++标准**: 确保项目使用C++17或更高版本
-2. **桥接头文件**: 在Build Settings中设置桥接头文件路径：
-   ```
-   Objective-C Bridging Header: C++Bridge/Include/OpenGLRenderer-Bridging-Header.h
-   ```
-3. **头文件搜索路径**: 添加C++头文件搜索路径：
-   ```
-   Header Search Paths: C++Bridge/Include
-   ```
-4. **编译器标志**: 添加必要的编译器标志：
-   ```
-   Other C++ Flags: -std=c++17
-   ```
-
-#### 常见编译问题解决
-
-**问题1**: 找不到C++头文件
-```
-解决: 检查Header Search Paths设置，确保包含C++Bridge/Include目录
-```
-
-**问题2**: 链接错误
-```
-解决: 确保所有.cpp文件都被添加到Xcode项目中并包含在编译目标中
-```
-
-**问题3**: Swift调用C++函数失败
-```
-解决: 检查桥接头文件设置，确保C接口函数正确声明和导出
-```
-
-### 6. 高级使用
-
-#### 创建自定义着色器
-```cpp
-const std::string vertexShader = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-
-out vec3 vertexColor;
-
-void main() {
-    gl_Position = vec4(aPos, 1.0);
-    vertexColor = aColor;
-}
-)";
-
-const std::string fragmentShader = R"(
-#version 330 core
-in vec3 vertexColor;
-out vec4 FragColor;
-
-void main() {
-    FragColor = vec4(vertexColor, 1.0);
-}
-)";
-
-Shader customShader(vertexShader, fragmentShader);
-```
-
-#### 使用索引绘制
-```cpp
-std::vector<float> vertices = {
-    // 四个顶点
-    -0.5f, -0.5f, 0.0f,  // 0
-     0.5f, -0.5f, 0.0f,  // 1
-     0.5f,  0.5f, 0.0f,  // 2
-    -0.5f,  0.5f, 0.0f   // 3
+public:
+    void initialize() override {
+        std::cout << "Initializing Texture Mapping Example" << std::endl;
+        
+        // 创建和编译着色器
+        // 设置顶点数据（包含纹理坐标）
+        // 创建和加载纹理
+        // 设置OpenGL状态
+    }
+    
+    void display() override {
+        // 清除屏幕
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        
+        // 使用着色器程序
+        glUseProgram(shaderProgram);
+        
+        // 绑定纹理
+        glBindTexture(GL_TEXTURE_2D, texture);
+        
+        // 绘制几何体
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
+    }
+    
+    void cleanup() override {
+        glDeleteTextures(1, &texture);
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteProgram(shaderProgram);
+        std::cout << "Texture Mapping Example cleaned up" << std::endl;
+    }
+    
+    std::string getName() const override {
+        return "Texture Mapping Example";
+    }
 };
 
-std::vector<unsigned int> indices = {
-    0, 1, 2,  // 第一个三角形
-    2, 3, 0   // 第二个三角形
-};
-
-Mesh quad(vertices, indices);
-quad.draw();
+// 注册示例（这一行很重要！）
+REGISTER_EXAMPLE(TextureMappingExample);
 ```
 
-### 7. 学习建议
+#### 步骤3: 编译运行
 
-#### 按书籍章节学习
-根据《Computer Graphics Programming in OpenGL with C++》的章节顺序：
+1. 在Xcode中编译项目（⌘+B）
+2. 运行应用（⌘+R）
+3. 新示例会自动出现在左侧列表中
 
-1. **第2章：基础三角形渲染**
-   ```cpp
-   Examples::Chapter2_BasicTriangle(renderer);
-   ```
+### 方法二：独立C++文件
 
-2. **第3章：着色器和颜色**
-   ```cpp
-   Examples::Chapter3_ColoredQuad(renderer);
-   ```
+#### 步骤1: 创建独立C++文件
 
-3. **第4章：多对象渲染**
-   ```cpp
-   Examples::Chapter4_MultipleObjects(renderer);
-   ```
-
-#### C++代码学习方法
-
-1. **从简单开始**: 先运行基础三角形示例
-2. **修改参数**: 尝试改变顶点坐标、颜色值
-3. **添加功能**: 在现有示例基础上添加新特性
-4. **创建新程序**: 编写完全独立的OpenGL程序
-
-### 8. 调试技巧
-
-#### OpenGL错误检查
-在C++代码中添加错误检查：
 ```cpp
-void checkGLError(const std::string& operation) {
+// Examples/chapter3/texture_mapping.cpp
+#include "ExampleBase.hpp"
+#include <OpenGL/gl3.h>
+
+class TextureMappingExample : public ExampleBase {
+    // 实现细节...
+};
+
+REGISTER_EXAMPLE(TextureMappingExample);
+```
+
+#### 步骤2: 在ExampleRegistry.cpp中包含
+
+```cpp
+// 在ExampleRegistry.cpp末尾添加
+#include "../../../Examples/chapter3/texture_mapping.cpp"
+```
+
+## 🏛 架构详解
+
+### ExampleBase基类
+
+所有示例都继承自`ExampleBase`基类：
+
+```cpp
+class ExampleBase {
+public:
+    virtual ~ExampleBase() = default;
+    
+    // 核心生命周期方法
+    virtual void initialize() = 0;    // 初始化OpenGL资源
+    virtual void display() = 0;       // 渲染逻辑
+    virtual void cleanup() = 0;       // 清理资源
+    
+    // 可选方法
+    virtual void onResize(int width, int height) {}  // 窗口大小变化
+    virtual void update(float deltaTime) {}          // 逻辑更新
+    virtual std::string getName() const = 0;         // 示例名称
+};
+```
+
+### 自动注册机制
+
+使用`REGISTER_EXAMPLE`宏自动注册示例：
+
+```cpp
+REGISTER_EXAMPLE(YourExampleClassName);
+```
+
+### 示例管理流程
+
+1. **启动时扫描** - `ExampleManager`扫描`Examples`文件夹中的JSON文件
+2. **解析配置** - 将JSON解析为`ExampleMetadata`对象
+3. **构建列表** - 按章节分组显示在左侧导航
+4. **动态创建** - 用户点击时调用C++工厂方法创建示例实例
+5. **生命周期管理** - 自动调用`initialize()` -> `display()` -> `cleanup()`
+
+## 🎨 示例模板
+
+### 基础渲染示例
+
+```cpp
+class MyBasicExample : public ExampleBase {
+private:
+    GLuint shaderProgram, VAO, VBO;
+
+public:
+    void initialize() override {
+        // 1. 编译着色器
+        // 2. 创建顶点数据
+        // 3. 设置VAO/VBO
+        // 4. 配置顶点属性
+    }
+    
+    void display() override {
+        // 1. 清除屏幕
+        // 2. 使用着色器
+        // 3. 绑定VAO
+        // 4. 绘制几何体
+    }
+    
+    void cleanup() override {
+        // 释放OpenGL资源
+    }
+    
+    std::string getName() const override {
+        return "My Basic Example";
+    }
+};
+```
+
+### 动画示例模板
+
+```cpp
+class MyAnimationExample : public ExampleBase {
+private:
+    float time = 0.0f;
+    
+public:
+    void display() override {
+        time += 0.016f; // ~60 FPS
+        
+        // 使用时间变量创建动画效果
+        GLint timeLocation = glGetUniformLocation(shaderProgram, "time");
+        glUniform1f(timeLocation, time);
+        
+        // 渲染...
+    }
+};
+```
+
+## 🛠 开发工具和调试
+
+### OpenGL错误检查
+
+```cpp
+void checkOpenGLError(const std::string& operation) {
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
-        std::cerr << "OpenGL Error in " << operation << ": " << error << std::endl;
+        std::cout << "OpenGL Error in " << operation << ": " << error << std::endl;
     }
 }
 
 // 使用示例
 glClear(GL_COLOR_BUFFER_BIT);
-checkGLError("glClear");
+checkOpenGLError("glClear");
 ```
 
-#### 着色器编译调试
-查看着色器编译错误信息（已在Shader类中实现）。
+### 着色器编译调试
 
-#### 几何体调试
-使用线框模式查看几何体结构：
+示例类内建了着色器编译错误检查：
+
 ```cpp
-glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // 线框模式
-// 渲染代码...
-glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // 恢复填充模式
-```
-
-### 9. 常见问题解决
-
-#### 渲染问题
-- **黑屏**: 检查着色器编译、顶点数据、MVP矩阵
-- **几何体不显示**: 验证顶点坐标范围、深度测试设置
-- **颜色异常**: 确认颜色值在0.0-1.0范围内
-
-#### 编译问题  
-- **C++语法错误**: 检查命名空间、头文件包含
-- **链接错误**: 确保所有.cpp文件都在Xcode项目中
-- **桥接问题**: 验证C接口函数签名正确
-
-### 10. 学习资源
-
-#### 推荐书籍
-- 《Computer Graphics Programming in OpenGL with C++》- 本框架的配套教材
-- 《OpenGL Programming Guide》(红宝书)
-- 《OpenGL SuperBible》(蓝宝书)
-- 《Real-Time Rendering》- 高级图形学理论
-
-#### 在线资源
-- [LearnOpenGL](https://learnopengl.com/) - 优秀的现代OpenGL教程
-- [OpenGL官方文档](https://www.opengl.org/documentation/)
-- [Khronos Group](https://www.khronos.org/opengl/) - OpenGL标准制定组织
-- [OpenGL Wiki](https://www.khronos.org/opengl/wiki/) - 详细的API参考
-
-#### 开发工具
-- **Xcode GPU Frame Capture** - 帧分析和调试
-- **OpenGL Profiler** - macOS自带的性能分析工具
-- **RenderDoc** - 跨平台图形调试器
-
-## 快速入门示例
-
-### 创建你的第一个C++程序
-
-1. **创建文件** `C++Bridge/Renderers/MyFirstProgram.cpp`:
-```cpp
-#include "GraphicsProgramming.hpp"
-
-namespace GraphicsProgramming {
-namespace Examples {
-
-void MyFirstProgram(Renderer& renderer) {
-    // 设置背景颜色为深绿色
-    renderer.clear(0.0f, 0.3f, 0.0f, 1.0f);
+GLuint compileShader(GLenum type, const char* source) {
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, &source, NULL);
+    glCompileShader(shader);
     
-    // 创建一个彩色三角形
-    std::vector<float> vertices = {
-        // 位置坐标
-        -0.6f, -0.4f, 0.0f,  // 左下角
-         0.6f, -0.4f, 0.0f,  // 右下角
-         0.0f,  0.6f, 0.0f   // 顶部
-    };
-    
-    renderer.drawTriangle(vertices);
+    int success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        std::cout << "Shader compilation failed: " << infoLog << std::endl;
+    }
+    return shader;
 }
-
-} // namespace Examples
-} // namespace GraphicsProgramming
 ```
 
-2. **更新头文件** `C++Bridge/Include/ExamplePrograms.hpp`:
+## 📚 学习路径
+
+### 按书籍章节学习
+
+1. **第1章：基础渲染**
+   - ✅ 基础三角形 - 学习最基础的渲染管线
+
+2. **第2章：着色器基础**
+   - ✅ 彩色光栅着色器 - 顶点着色器和片段着色器
+
+3. **第3章：纹理技术**
+   - 📝 纹理映射 - 2D纹理加载和应用
+   - 📝 多重纹理 - 混合多个纹理
+
+4. **第4章：变换矩阵**
+   - 📝 3D变换 - 模型、视图、投影矩阵
+   - 📝 相机控制 - 第一人称相机
+
+### 推荐学习方法
+
+1. **先运行** - 运行现有示例，观察效果
+2. **再修改** - 修改着色器代码、顶点数据
+3. **后创建** - 基于模板创建新示例
+4. **深入理解** - 研究OpenGL状态机和渲染管线
+
+## ⚡ 性能优化
+
+### 资源管理最佳实践
+
 ```cpp
-void MyFirstProgram(Renderer& renderer);
+class OptimizedExample : public ExampleBase {
+private:
+    // 使用RAII管理OpenGL资源
+    struct GLResource {
+        GLuint id = 0;
+        ~GLResource() { if (id) glDeleteBuffers(1, &id); }
+    } vbo, vao;
+
+public:
+    void cleanup() override {
+        // 析构函数会自动清理资源
+    }
+};
 ```
 
-3. **运行程序**: 在Xcode中按⌘+R运行项目
+### 批量渲染
 
-## 最佳实践
+```cpp
+void display() override {
+    // 避免频繁状态切换
+    glUseProgram(shaderProgram);
+    glBindVertexArray(VAO);
+    
+    // 批量绘制相同类型的对象
+    for (int i = 0; i < objectCount; ++i) {
+        // 只更新必要的uniform
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &modelMatrices[i][0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
+}
+```
 
-### C++代码规范
-- 使用命名空间避免全局污染
-- 遵循RAII原则管理资源
-- 适当使用const和引用
-- 添加必要的错误检查
+## 🔧 常见问题解决
 
-### OpenGL最佳实践
-- 使用VAO组织顶点属性状态
-- 避免不必要的状态切换
-- 合理使用缓冲区类型（STATIC_DRAW, DYNAMIC_DRAW等）
-- 及时释放GPU资源
+### 编译问题
 
-### 性能优化建议
-- 批量绘制相同材质的对象
-- 使用索引缓冲区减少顶点重复
-- 适当使用实例化渲染
-- 避免每帧分配大量内存
+1. **找不到头文件**
+   ```
+   解决：检查Xcode项目中的Header Search Paths设置
+   ```
 
-## 故障排除
+2. **链接错误**
+   ```
+   解决：确保ExampleRegistry.cpp包含在编译目标中
+   ```
 
-### 编译时问题
-1. **找不到头文件**: 检查Xcode的Header Search Paths设置
-2. **链接错误**: 确保所有.cpp文件都加入了构建目标
-3. **C++标准错误**: 在Build Settings中设置C++ Language Dialect为C++17
+3. **桥接问题**
+   ```
+   解决：检查Bridging-Header.h文件路径配置
+   ```
 
 ### 运行时问题
-1. **黑屏**: 检查OpenGL上下文创建和着色器编译
-2. **崩溃**: 使用Xcode调试器定位问题，检查数组越界
-3. **渲染错误**: 启用OpenGL错误检查，验证OpenGL状态
 
-## 总结
+1. **示例不显示在列表中**
+   ```
+   解决：检查JSON配置文件格式，确保复制到app bundle中
+   ```
 
-这个C++桥接框架让你能够：
-- 直接使用C++编写OpenGL程序
-- 享受现代C++特性和STL容器
-- 学习《Computer Graphics Programming in OpenGL with C++》书中的示例
-- 在macOS环境下进行图形编程学习
+2. **渲染黑屏**
+   ```
+   解决：检查着色器编译、顶点数据、OpenGL状态设置
+   ```
 
-通过这个框架，你可以专注于学习OpenGL和计算机图形学概念，而不必担心平台特定的窗口管理和上下文创建问题。开始你的图形编程之旅吧！
+3. **切换示例崩溃**
+   ```
+   解决：确保cleanup()方法正确释放所有OpenGL资源
+   ```
+
+## 🎯 与旧架构的区别
+
+| 特性 | 旧架构 | 新架构 |
+|------|--------|--------|
+| 示例定义 | 硬编码在Swift中 | JSON配置文件 |
+| C++实现 | 分散在多个文件 | 统一基类接口 |
+| 添加示例 | 修改多个Swift文件 | 只需JSON + C++类 |
+| 代码维护 | ContentView 329行 | ContentView 46行 |
+| 扩展性 | 耦合度高 | 高度解耦 |
+
+## 📖 学习资源
+
+### 官方文档
+- [OpenGL官方文档](https://www.opengl.org/documentation/)
+- [Khronos OpenGL Wiki](https://www.khronos.org/opengl/wiki/)
+
+### 在线教程
+- [LearnOpenGL](https://learnopengl.com/) - 现代OpenGL教程
+- [OpenGL Tutorial](http://www.opengl-tutorial.org/) - 实践导向教程
+
+### 推荐书籍
+- 《Computer Graphics Programming in OpenGL with C++》- 本框架配套教材
+- 《OpenGL Programming Guide》- 红宝书
+- 《OpenGL SuperBible》- 蓝宝书
+- 《Real-Time Rendering》- 高级渲染技术
+
+## 🤝 贡献指南
+
+欢迎贡献新的OpenGL示例！请遵循以下步骤：
+
+1. Fork此仓库
+2. 创建新的示例（JSON + C++类）
+3. 测试示例功能
+4. 提交Pull Request
+
+## 📄 许可证
+
+本项目采用MIT许可证。详见LICENSE文件。
+
+## 🏆 总结
+
+这个现代化的OpenGL学习框架让你能够：
+
+- 🎯 **专注学习** - 专注于OpenGL和图形编程，而非框架代码
+- 🚀 **快速开发** - 添加新示例只需JSON + C++类
+- 🏗 **架构优雅** - 配置驱动 + 多态设计，高度解耦
+- 📚 **系统学习** - 完美配合《Computer Graphics Programming in OpenGL with C++》教材
+- 🔧 **易于维护** - 清晰的代码结构和职责分离
+
+开始你的图形编程之旅吧！🚀

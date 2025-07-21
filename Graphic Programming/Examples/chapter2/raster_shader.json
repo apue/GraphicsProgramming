@@ -1,0 +1,8 @@
+{
+    "id": "chapter2_raster_shader",
+    "title": "彩色光栅着色器",
+    "chapter": "第2章：着色器基础",
+    "description": "演示顶点颜色插值和片段着色器的基础用法",
+    "orderIndex": 1,
+    "cppClass": "RasterShaderExample"
+}

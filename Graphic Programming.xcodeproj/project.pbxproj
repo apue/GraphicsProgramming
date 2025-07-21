@@ -27,6 +27,7 @@
 		661BD9A12E2E170C0004517C /* Graphic Programming.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Graphic Programming.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		661BD9B12E2E170E0004517C /* Graphic ProgrammingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Graphic ProgrammingTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		661BD9BB2E2E170E0004517C /* Graphic ProgrammingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Graphic ProgrammingUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		661BDA2B2E2E86480004517C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		661BD9982E2E170C0004517C = {
 			isa = PBXGroup;
 			children = (
+				661BDA2B2E2E86480004517C /* README.md */,
 				661BD9A32E2E170C0004517C /* Graphic Programming */,
 				661BD9B42E2E170E0004517C /* Graphic ProgrammingTests */,
 				661BD9BE2E2E170E0004517C /* Graphic ProgrammingUITests */,
