@@ -13,6 +13,7 @@ import OpenGL.GL3
 final class OpenGLViewController: NSViewController {
     private var glView: NSOpenGLView!
     private var renderCallback: (() -> Void)?
+    private var cppRenderer: OpaquePointer?
     
     convenience init(renderCallback: @escaping () -> Void) {
         self.init()
@@ -40,14 +41,12 @@ final class OpenGLViewController: NSViewController {
         if let context = glView.openGLContext {
             context.makeCurrentContext()
             
+            // Initialize C++ renderer
+            cppRenderer = createRenderer()
+            initializeRenderer(cppRenderer)
+            
             // 设置OpenGL视口
-            glViewport(0, 0, GLsizei(glView.bounds.width), GLsizei(glView.bounds.height))
-            
-            // 启用深度测试
-            glEnable(GLenum(GL_DEPTH_TEST))
-            
-            // 设置清屏颜色为深灰色
-            glClearColor(0.2, 0.2, 0.2, 1.0)
+            resizeViewport(cppRenderer, Int32(glView.bounds.width), Int32(glView.bounds.height))
         }
     }
     
@@ -65,8 +64,10 @@ final class OpenGLViewController: NSViewController {
         
         context.makeCurrentContext()
         
-        // 清除颜色缓冲区和深度缓冲区
-        glClear(GLbitfield(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT))
+        // Use C++ renderer
+        if let renderer = cppRenderer {
+            renderFrame(renderer)
+        }
         
         // 执行自定义渲染
         renderCallback?()
@@ -77,6 +78,12 @@ final class OpenGLViewController: NSViewController {
     
     func updateRenderCallback(_ callback: @escaping () -> Void) {
         self.renderCallback = callback
+    }
+    
+    deinit {
+        if let renderer = cppRenderer {
+            destroyRenderer(renderer)
+        }
     }
 }
 
