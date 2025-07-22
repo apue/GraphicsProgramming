@@ -25,34 +25,7 @@ class ExampleManager: ObservableObject {
             return
         }
         
-        let examplesPath = bundlePath + "/Examples"
-        
-        // Function to recursively scan directories for JSON files
-        func scanDirectory(_ path: String) {
-            let fileManager = FileManager.default
-            
-            do {
-                let contents = try fileManager.contentsOfDirectory(atPath: path)
-                
-                for item in contents {
-                    let fullPath = path + "/" + item
-                    
-                    var isDirectory: ObjCBool = false
-                    if fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory) {
-                        if isDirectory.boolValue {
-                            // Recursively scan subdirectories
-                            scanDirectory(fullPath)
-                        } else if item.hasSuffix(".json") {
-                            // Load JSON configuration file
-                            loadExampleFromFile(fullPath)
-                        }
-                    }
-                }
-            } catch {
-                print("Failed to scan directory \(path): \(error)")
-            }
-        }
-        
+        // Function to load JSON files directly from Resources directory
         func loadExampleFromFile(_ filePath: String) {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
@@ -64,13 +37,19 @@ class ExampleManager: ObservableObject {
             }
         }
         
-        // Check if Examples directory exists
-        if FileManager.default.fileExists(atPath: examplesPath) {
-            scanDirectory(examplesPath)
-        } else {
-            print("Examples directory not found at: \(examplesPath)")
-            // Fallback to hardcoded examples for now
-            loadHardcodedExamples()
+        // Scan Resources directory for JSON files (flat structure due to Xcode build system)
+        let fileManager = FileManager.default
+        do {
+            let contents = try fileManager.contentsOfDirectory(atPath: bundlePath)
+            
+            for item in contents {
+                if item.hasSuffix(".json") {
+                    let fullPath = bundlePath + "/" + item
+                    loadExampleFromFile(fullPath)
+                }
+            }
+        } catch {
+            print("Failed to scan bundle resources: \(error)")
             return
         }
         
@@ -87,31 +66,6 @@ class ExampleManager: ObservableObject {
         }
     }
     
-    private func loadHardcodedExamples() {
-        // Fallback hardcoded examples
-        let hardcodedExamples = [
-            ExampleMetadata(
-                id: "chapter1_triangle",
-                title: "基础三角形",
-                chapter: "第1章：基础渲染",
-                description: "绘制一个简单的三角形，演示最基础的OpenGL渲染流程",
-                orderIndex: 1,
-                cppClass: "TriangleExample"
-            ),
-            ExampleMetadata(
-                id: "chapter2_raster_shader",
-                title: "彩色光栅着色器",
-                chapter: "第2章：着色器基础",
-                description: "演示顶点颜色插值和片段着色器的基础用法",
-                orderIndex: 1,
-                cppClass: "RasterShaderExample"
-            )
-        ]
-        
-        DispatchQueue.main.async {
-            self.examples = hardcodedExamples
-        }
-    }
     
     func getGroupedExamples() -> [String: [ExampleMetadata]] {
         return Dictionary(grouping: examples) { $0.chapter }

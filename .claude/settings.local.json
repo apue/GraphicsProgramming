@@ -14,7 +14,8 @@
       "Bash(mkdir:*)",
       "Bash(ls:*)",
       "Bash(cp:*)",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }
