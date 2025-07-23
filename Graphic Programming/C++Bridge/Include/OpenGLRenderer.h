@@ -8,31 +8,32 @@ extern "C" {
 #include <OpenGL/gl3.h>
 
 // C interface for Swift bridging
-typedef struct OpenGLRenderer OpenGLRenderer;
 typedef struct ExampleInstance ExampleInstance;
 
-// Traditional renderer (for backward compatibility)
-OpenGLRenderer* createRenderer(void);
-void destroyRenderer(OpenGLRenderer* renderer);
-void initializeRenderer(OpenGLRenderer* renderer);
-void renderFrame(OpenGLRenderer* renderer);
-void resizeViewport(OpenGLRenderer* renderer, int width, int height);
-
-// New example-based system
-ExampleInstance* createExampleByClassName(const char* className);
+// 示例实例管理
+ExampleInstance* createExampleById(const char* id);
 void destroyExample(ExampleInstance* example);
 void initializeExample(ExampleInstance* example);
 void renderExample(ExampleInstance* example);
 void resizeExample(ExampleInstance* example, int width, int height);
 
-// Shader management
+// 示例信息结构体
+struct CExampleInfo {
+    const char* id;
+    const char* title;
+    const char* chapter;
+    const char* description;
+    int order;
+};
+
+// 示例信息获取
+int cppGetExampleCount(void);
+void cppGetExampleInfo(int index, struct CExampleInfo* info);
+
+// 工具函数
 unsigned int loadShader(const char* vertexSource, const char* fragmentSource);
 void useShader(unsigned int shaderProgram);
-
-// Drawing utilities
 void clearScreen(float r, float g, float b, float a);
-void drawTriangle(float vertices[9]);
-void drawQuad(float vertices[12]);
 
 #ifdef __cplusplus
 }

@@ -1,31 +1,12 @@
 #include "OpenGLRenderer.h"
 #include "ExampleBase.hpp"
 #include <memory>
+#include <vector>
 #include <iostream>
+#include <string>
 #include <OpenGL/gl3.h>
 
-// Bridge implementation - simple OpenGL wrapper for legacy compatibility
-struct OpenGLRenderer {
-    bool initialized = false;
-    
-    void initialize() {
-        if (!initialized) {
-            glEnable(GL_DEPTH_TEST);
-            initialized = true;
-        }
-    }
-    
-    void clear() {
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-    
-    void setViewport(int width, int height) {
-        glViewport(0, 0, width, height);
-    }
-};
-
-// Example instance wrapper
+// 示例实例包装
 struct ExampleInstance {
     std::unique_ptr<ExampleBase> example;
     bool initialized;
@@ -34,48 +15,21 @@ struct ExampleInstance {
         : example(std::move(ex)), initialized(false) {}
 };
 
+// 用于Swift获取示例信息的静态存储
+static std::vector<ExampleInfo> cachedExamples;
+
 extern "C" {
 
-// Traditional renderer functions (for backward compatibility)
-OpenGLRenderer* createRenderer(void) {
-    return new OpenGLRenderer();
-}
-
-void destroyRenderer(OpenGLRenderer* renderer) {
-    delete renderer;
-}
-
-void initializeRenderer(OpenGLRenderer* renderer) {
-    if (renderer) {
-        renderer->initialize();
-    }
-}
-
-void renderFrame(OpenGLRenderer* renderer) {
-    if (renderer) {
-        renderer->clear();
-        // Default rendering - just clear screen with dark gray background
-    }
-}
-
-void resizeViewport(OpenGLRenderer* renderer, int width, int height) {
-    if (renderer) {
-        renderer->setViewport(width, height);
-    }
-}
-
-// New example-based functions
-ExampleInstance* createExampleByClassName(const char* className) {
-    if (!className) {
-        std::cout << "Error: className is null" << std::endl;
+// 示例实例管理
+ExampleInstance* createExampleById(const char* id) {
+    if (!id) {
+        std::cout << "Error: id is null" << std::endl;
         return nullptr;
     }
     
-    std::cout << "Creating example: " << className << std::endl;
-    
-    auto example = ExampleRegistry::getInstance().createExample(className);
+    auto example = ExampleRegistry::getInstance().createExample(id);
     if (!example) {
-        std::cout << "Failed to create example: " << className << std::endl;
+        std::cout << "Failed to create example: " << id << std::endl;
         return nullptr;
     }
     
@@ -93,56 +47,115 @@ void destroyExample(ExampleInstance* instance) {
 
 void initializeExample(ExampleInstance* instance) {
     if (instance && instance->example && !instance->initialized) {
-        try {
-            instance->example->initialize();
-            instance->initialized = true;
-            std::cout << "Example initialized successfully" << std::endl;
-        } catch (const std::exception& e) {
-            std::cout << "Failed to initialize example: " << e.what() << std::endl;
-        }
+        instance->example->initialize();
+        instance->initialized = true;
     }
 }
 
 void renderExample(ExampleInstance* instance) {
     if (instance && instance->example && instance->initialized) {
-        try {
-            instance->example->display();
-        } catch (const std::exception& e) {
-            std::cout << "Failed to render example: " << e.what() << std::endl;
-        }
+        instance->example->display();
     }
 }
 
 void resizeExample(ExampleInstance* instance, int width, int height) {
     if (instance && instance->example && instance->initialized) {
-        try {
-            glViewport(0, 0, width, height);
-            instance->example->onResize(width, height);
-        } catch (const std::exception& e) {
-            std::cout << "Failed to resize example: " << e.what() << std::endl;
-        }
+        instance->example->onResize(width, height);
     }
 }
 
+// 示例信息获取
+int cppGetExampleCount(void) {
+    auto examples = ExampleRegistry::getInstance().getAllExamples();
+    cachedExamples = examples;
+    return static_cast<int>(examples.size());
+}
+
+void cppGetExampleInfo(int index, struct CExampleInfo* info) {
+    if (!info) return;
+    
+    if (index < 0 || index >= static_cast<int>(cachedExamples.size())) {
+        info->id = "";
+        info->title = "";
+        info->chapter = "";
+        info->description = "";
+        info->order = 0;
+        return;
+    }
+    
+    const auto& exampleInfo = cachedExamples[index];
+    
+    // 使用静态存储确保字符串生命周期
+    static std::vector<std::string> stringStorage;
+    stringStorage.clear();
+    stringStorage.push_back(exampleInfo.id);
+    stringStorage.push_back(exampleInfo.title);
+    stringStorage.push_back(exampleInfo.chapter);
+    stringStorage.push_back(exampleInfo.description);
+    
+    info->id = stringStorage[0].c_str();
+    info->title = stringStorage[1].c_str();
+    info->chapter = stringStorage[2].c_str();
+    info->description = stringStorage[3].c_str();
+    info->order = exampleInfo.order;
+}
+
+// 工具函数
 unsigned int loadShader(const char* vertexSource, const char* fragmentSource) {
-    // Simplified shader loading - for compatibility only
+    if (!vertexSource || !fragmentSource) return 0;
+    
+    // 创建顶点着色器
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
     
+    // 检查编译错误
+    GLint success;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "Vertex shader compilation failed: " << infoLog << std::endl;
+        glDeleteShader(vertexShader);
+        return 0;
+    }
+    
+    // 创建片段着色器
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
     
-    GLuint program = glCreateProgram();
-    glAttachShader(program, vertexShader);
-    glAttachShader(program, fragmentShader);
-    glLinkProgram(program);
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "Fragment shader compilation failed: " << infoLog << std::endl;
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+        return 0;
+    }
+    
+    // 创建着色器程序
+    GLuint shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+    
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout << "Shader program linking failed: " << infoLog << std::endl;
+        glDeleteProgram(shaderProgram);
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+        return 0;
+    }
     
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
     
-    return program;
+    return shaderProgram;
 }
 
 void useShader(unsigned int shaderProgram) {
@@ -154,42 +167,4 @@ void clearScreen(float r, float g, float b, float a) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void drawTriangle(float vertices[9]) {
-    // Simplified triangle drawing for compatibility
-    GLuint VAO, VBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), vertices, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
 }
-
-void drawQuad(float vertices[12]) {
-    // Simplified quad drawing for compatibility  
-    GLuint VAO, VBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertices, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-}
-
-} // extern "C"

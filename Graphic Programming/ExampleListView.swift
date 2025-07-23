@@ -31,15 +31,6 @@ struct ExampleListView: View {
             }
         }
         .navigationTitle("OpenGL学习")
-        .toolbar {
-            ToolbarItem {
-                Button(action: {
-                    exampleManager.loadExamplesFromConfig()
-                }) {
-                    Label("重新加载示例", systemImage: "arrow.clockwise")
-                }
-            }
-        }
         .searchable(text: $searchText)
     }
     

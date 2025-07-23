@@ -7,58 +7,67 @@
 
 import Foundation
 
+// C++接口声明
+struct CExampleInfo {
+    let id: UnsafePointer<CChar>?
+    let title: UnsafePointer<CChar>?
+    let chapter: UnsafePointer<CChar>?
+    let description: UnsafePointer<CChar>?
+    let order: Int32
+}
+
+// C++桥接函数
+@_silgen_name("cppGetExampleCount")
+func cppGetExampleCount() -> Int32
+
+@_silgen_name("cppGetExampleInfo")
+func cppGetExampleInfo(_ index: Int32, _ info: UnsafeMutablePointer<CExampleInfo>?)
+
+@_silgen_name("createExampleById")
+func createExampleById(_ id: UnsafePointer<CChar>?) -> OpaquePointer?
+
 class ExampleManager: ObservableObject {
     @Published var examples: [ExampleMetadata] = []
     
     static let shared = ExampleManager()
     
     private init() {
-        loadExamplesFromConfig()
+        loadExamplesFromRegistry()
     }
     
-    func loadExamplesFromConfig() {
+    func loadExamplesFromRegistry() {
+        let count = cppGetExampleCount()
         var loadedExamples: [ExampleMetadata] = []
         
-        // Get the main bundle
-        guard let bundlePath = Bundle.main.resourcePath else {
-            print("Failed to get bundle resource path")
-            return
-        }
-        
-        // Function to load JSON files directly from Resources directory
-        func loadExampleFromFile(_ filePath: String) {
-            do {
-                let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
-                let metadata = try JSONDecoder().decode(ExampleMetadata.self, from: data)
-                loadedExamples.append(metadata)
-                print("Loaded example: \(metadata.title)")
-            } catch {
-                print("Failed to load example from \(filePath): \(error)")
+        for i in 0..<Int(count) {
+            var cInfo = CExampleInfo(id: nil, title: nil, chapter: nil, description: nil, order: 0)
+            withUnsafeMutablePointer(to: &cInfo) { ptr in
+                cppGetExampleInfo(Int32(i), ptr)
             }
-        }
-        
-        // Scan Resources directory for JSON files (flat structure due to Xcode build system)
-        let fileManager = FileManager.default
-        do {
-            let contents = try fileManager.contentsOfDirectory(atPath: bundlePath)
             
-            for item in contents {
-                if item.hasSuffix(".json") {
-                    let fullPath = bundlePath + "/" + item
-                    loadExampleFromFile(fullPath)
-                }
+            guard let idPtr = cInfo.id,
+                  let titlePtr = cInfo.title,
+                  let chapterPtr = cInfo.chapter,
+                  let descPtr = cInfo.description else {
+                continue
             }
-        } catch {
-            print("Failed to scan bundle resources: \(error)")
-            return
-        }
-        
-        // Sort examples by chapter and order index
-        loadedExamples.sort { example1, example2 in
-            if example1.chapter != example2.chapter {
-                return example1.chapter < example2.chapter
-            }
-            return example1.orderIndex < example2.orderIndex
+            
+            let id = String(cString: idPtr)
+            let title = String(cString: titlePtr)
+            let chapter = String(cString: chapterPtr)
+            let description = String(cString: descPtr)
+            let orderIndex = Int(cInfo.order)
+            
+            let metadata = ExampleMetadata(
+                id: id,
+                title: title,
+                chapter: chapter,
+                description: description,
+                orderIndex: orderIndex,
+                cppClass: id // 使用id作为类名
+            )
+            
+            loadedExamples.append(metadata)
         }
         
         DispatchQueue.main.async {
@@ -66,12 +75,13 @@ class ExampleManager: ObservableObject {
         }
     }
     
-    
     func getGroupedExamples() -> [String: [ExampleMetadata]] {
         return Dictionary(grouping: examples) { $0.chapter }
     }
     
     func createCppExample(_ metadata: ExampleMetadata) -> OpaquePointer? {
-        return createExampleByClassName(metadata.cppClass)
+        return metadata.id.withCString { idPtr in
+            createExampleById(idPtr)
+        }
     }
 }

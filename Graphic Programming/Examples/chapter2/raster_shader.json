@@ -1,8 +1,0 @@
-{
-    "id": "chapter2_raster_shader",
-    "title": "彩色光栅着色器",
-    "chapter": "第2章：OpenGL图像管线",
-    "description": "演示顶点颜色插值和片段着色器的基础用法",
-    "orderIndex": 1,
-    "cppClass": "RasterShaderExample"
-}

@@ -1,10 +1,3 @@
-//
-//  first_gl_code.cpp
-//  Graphic Programming
-//
-//  Created by Yang Tian on 2025/7/22.
-//
-
 #include "ExampleBase.hpp"
 #include <OpenGL/gl3.h>
 #include <iostream>
@@ -35,5 +28,4 @@ public:
     }
 };
 
-REGISTER_EXAMPLE(FirstGlExample);
-
+AUTO_EXAMPLE(FirstGlExample, "first_gl", "第一个OpenGL代码", "第2章：着色器基础", "演示最基础的OpenGL渲染流程", 2)

@@ -18,8 +18,7 @@ struct ContentView: View {
             detailView
         }
         .onAppear {
-            // Load examples from configuration files
-            exampleManager.loadExamplesFromConfig()
+            // 示例现在自动加载，无需手动调用
         }
     }
     

@@ -12,7 +12,6 @@ import OpenGL.GL3
 
 final class OpenGLViewController: NSViewController {
     private var glView: NSOpenGLView!
-    private var cppRenderer: OpaquePointer?
     private var currentExample: OpaquePointer?
     private var currentExampleMetadata: ExampleMetadata?
     
@@ -23,6 +22,7 @@ final class OpenGLViewController: NSViewController {
             UInt32(NSOpenGLPFADepthSize), 24,
             UInt32(NSOpenGLPFAStencilSize), 8,
             UInt32(NSOpenGLPFADoubleBuffer),
+            UInt32(NSOpenGLPFAOpenGLProfile), UInt32(NSOpenGLProfileVersion4_1Core),
             0
         ]
         
@@ -36,21 +36,7 @@ final class OpenGLViewController: NSViewController {
         
         if let context = glView.openGLContext {
             context.makeCurrentContext()
-            
-            // Initialize C++ renderer
-            cppRenderer = createRenderer()
-            if let renderer = cppRenderer {
-                initializeRenderer(renderer)
-                checkOpenGLError("initializeRenderer")
-                
-                // 设置OpenGL视口
-                resizeViewport(renderer, Int32(glView.bounds.width), Int32(glView.bounds.height))
-                checkOpenGLError("resizeViewport")
-                
-                print("OpenGL Renderer initialized successfully")
-            } else {
-                print("Failed to create C++ renderer")
-            }
+            print("OpenGL context created successfully")
         } else {
             print("Failed to create OpenGL context")
         }
@@ -69,8 +55,11 @@ final class OpenGLViewController: NSViewController {
         super.viewDidLayout()
         
         // 当视图大小改变时更新视口
-        if let renderer = cppRenderer {
-            resizeViewport(renderer, Int32(glView.bounds.width), Int32(glView.bounds.height))
+        if let example = currentExample {
+            if let context = glView.openGLContext {
+                context.makeCurrentContext()
+                resizeExample(example, Int32(glView.bounds.width), Int32(glView.bounds.height))
+            }
         }
     }
     
@@ -82,15 +71,14 @@ final class OpenGLViewController: NSViewController {
         
         context.makeCurrentContext()
         
-        // Render current example if available, otherwise use default renderer
+        // Render current example if available
         if let example = currentExample {
             renderExample(example)
-            checkOpenGLError("Example renderFrame")
-        } else if let renderer = cppRenderer {
-            renderFrame(renderer)
-            checkOpenGLError("C++ renderFrame")
+            checkOpenGLError("Example render")
         } else {
-            print("OpenGL Error: No renderer or example available")
+            // 默认清屏
+            glClearColor(0.2, 0.3, 0.3, 1.0)
+            glClear(GLbitfield(GL_COLOR_BUFFER_BIT) | GLbitfield(GL_DEPTH_BUFFER_BIT))
         }
         
         // 交换缓冲区
@@ -136,9 +124,6 @@ final class OpenGLViewController: NSViewController {
     deinit {
         if let example = currentExample {
             destroyExample(example)
-        }
-        if let renderer = cppRenderer {
-            destroyRenderer(renderer)
         }
     }
 }

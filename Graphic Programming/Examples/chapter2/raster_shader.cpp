@@ -143,5 +143,5 @@ public:
     }
 };
 
-// Register the example
-REGISTER_EXAMPLE(RasterShaderExample);
+// 使用新的自动注册宏
+AUTO_EXAMPLE(RasterShaderExample, "raster_shader", "彩色光栅着色器", "第2章：着色器基础", "演示顶点颜色插值和动态效果", 1)

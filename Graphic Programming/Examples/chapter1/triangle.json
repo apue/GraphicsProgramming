@@ -1,8 +1,0 @@
-{
-    "id": "chapter1_triangle",
-    "title": "基础三角形",
-    "chapter": "第1章：基础渲染",
-    "description": "绘制一个简单的三角形，演示最基础的OpenGL渲染流程",
-    "orderIndex": 1,
-    "cppClass": "TriangleExample"
-}

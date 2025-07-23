@@ -116,5 +116,5 @@ public:
     }
 };
 
-// Register the example
-REGISTER_EXAMPLE(TriangleExample);
+// 使用新的自动注册宏
+AUTO_EXAMPLE(TriangleExample, "triangle", "基础三角形", "第1章：基础渲染", "绘制一个简单的三角形，演示最基础的OpenGL渲染流程", 1)
